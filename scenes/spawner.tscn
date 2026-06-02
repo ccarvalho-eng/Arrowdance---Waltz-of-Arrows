@@ -1,0 +1,12 @@
+[gd_scene format=3 uid="uid://ypwf75vmcaq8"]
+
+[ext_resource type="Script" uid="uid://ca48se7y1ehdj" path="res://scripts/spawner.gd" id="1_2vbf6"]
+[ext_resource type="PackedScene" uid="uid://dak6aqrsouy5n" path="res://scenes/nightborne.tscn" id="2_tx2ig"]
+[ext_resource type="PackedScene" uid="uid://5b1mc2hx01fk" path="res://scenes/skeleton.tscn" id="3_6bbd6"]
+
+[node name="Spawner" type="Node2D" unique_id=1596330116 groups=["spawner"]]
+script = ExtResource("1_2vbf6")
+enemies = Array[PackedScene]([ExtResource("2_tx2ig"), ExtResource("3_6bbd6")])
+
+[node name="Timer" type="Timer" parent="." unique_id=143869398]
+autostart = true

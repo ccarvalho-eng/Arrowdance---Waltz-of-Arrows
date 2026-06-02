@@ -1,0 +1,104 @@
+[gd_scene format=3 uid="uid://peod2ox4eyit"]
+
+[ext_resource type="Script" uid="uid://w1jiyyoasxyj" path="res://scripts/bow.gd" id="1_prjx1"]
+[ext_resource type="Texture2D" uid="uid://ddkuk8p3wecie" path="res://assets/player/Bow.png" id="1_vt0lb"]
+[ext_resource type="PackedScene" uid="uid://6opwftudooqj" path="res://scenes/arrow.tscn" id="2_rivji"]
+[ext_resource type="AudioStream" uid="uid://chkgm3oqujuwo" path="res://assets/player/sounds/pull-bow.mp3" id="4_atxj4"]
+[ext_resource type="AudioStream" uid="uid://b6nks6d574nck" path="res://assets/player/sounds/arrow-swish.mp3" id="5_oxltw"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_15scw"]
+atlas = ExtResource("1_vt0lb")
+region = Rect2(144, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rivji"]
+atlas = ExtResource("1_vt0lb")
+region = Rect2(240, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_atxj4"]
+atlas = ExtResource("1_vt0lb")
+region = Rect2(0, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_oxltw"]
+atlas = ExtResource("1_vt0lb")
+region = Rect2(48, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_uma3s"]
+atlas = ExtResource("1_vt0lb")
+region = Rect2(96, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ji0pi"]
+atlas = ExtResource("1_vt0lb")
+region = Rect2(144, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_prjx1"]
+atlas = ExtResource("1_vt0lb")
+region = Rect2(192, 0, 48, 48)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_15scw"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_15scw")
+}],
+"loop": true,
+"name": &"hold",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rivji")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_atxj4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_oxltw")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_uma3s")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ji0pi")
+}],
+"loop": false,
+"name": &"pulling",
+"speed": 6.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_prjx1")
+}],
+"loop": true,
+"name": &"shoot",
+"speed": 10.0
+}]
+
+[node name="Bow" type="Node2D" unique_id=1897368068]
+script = ExtResource("1_prjx1")
+arrow_scene = ExtResource("2_rivji")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=442421860]
+sprite_frames = SubResource("SpriteFrames_15scw")
+animation = &"idle"
+autoplay = "idle"
+
+[node name="ArrowSpawn" type="Marker2D" parent="." unique_id=2094237802]
+position = Vector2(0, 14)
+
+[node name="Cooldown" type="Timer" parent="." unique_id=1475179689]
+
+[node name="Pulling" type="AudioStreamPlayer" parent="." unique_id=291361657]
+stream = ExtResource("4_atxj4")
+volume_db = -2.0
+
+[node name="Release" type="AudioStreamPlayer" parent="." unique_id=1483852751]
+stream = ExtResource("5_oxltw")
+
+[node name="ChargeTime" type="Timer" parent="." unique_id=919494685]
+
+[connection signal="animation_finished" from="AnimatedSprite2D" to="." method="_on_animated_sprite_2d_animation_finished"]
