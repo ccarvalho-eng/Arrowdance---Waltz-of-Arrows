@@ -1,6 +1,8 @@
 extends CharacterBody2D
 
-@export var speed := 90.0
+@export var speed := 55.0
+@export var health := 30
+@export var enemy_damage := 1
 
 @onready var sprite = $AnimatedSprite2D
 @onready var collision = $CollisionShape2D
@@ -8,14 +10,11 @@ extends CharacterBody2D
 
 var player: Node2D
 
-var health := 30
 var direction
 var dead := false
 var player_dead = false
 
 signal died
-
-var enemy_damage = 1
 
 
 func _ready() -> void:

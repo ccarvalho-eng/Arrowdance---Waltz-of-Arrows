@@ -15,9 +15,13 @@ var friction = 1800
 var direction = Vector2.ZERO
 var facing_dir = Vector2.DOWN
 
+@export var max_health := 5
+@export var damage_cooldown := 0.65
+
 var health = 5
 
 var dead = false
+var invulnerable := false
 
 var using_gamepad := false
 
@@ -92,21 +96,33 @@ func update_facing_direction():
 
 func take_damage(enemy_damage):
 	
+	if dead or invulnerable:
+		return
+
+	invulnerable = true
+
+	health -= enemy_damage
+	health_changed.emit(health, max_health)
+
+	if health <=0:
+		die()
+		return
+
+	hurt_fx.play()
+
+	sprite.modulate = Color.RED
+	await get_tree().create_timer(0.1).timeout
+
 	if dead:
 		return
-	elif !dead:
-		health -= enemy_damage
-		health_changed.emit(health, 5)
-		
-		if health <=0:
-			die()
-			return
-		
-		hurt_fx.play()
-		
-		sprite.modulate = Color.RED
-		await get_tree().create_timer(0.1).timeout
-		sprite.modulate = Color.WHITE
+
+	sprite.modulate = Color.WHITE
+	await get_tree().create_timer(max(damage_cooldown - 0.1, 0.0)).timeout
+
+	if dead:
+		return
+
+	invulnerable = false
 
 
 

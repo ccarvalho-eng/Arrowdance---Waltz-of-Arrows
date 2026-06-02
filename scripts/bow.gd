@@ -1,7 +1,7 @@
 extends Node2D
 
 @export var arrow_scene: PackedScene
-@export var reload_rotation_required := deg_to_rad(300.0)
+@export var reload_time := 0.35
 
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var arrow_spawn: Marker2D = $ArrowSpawn
@@ -15,6 +15,7 @@ extends Node2D
 @export var charged_threshold := 0.5
 @export var charged_multiplier := 3.0
 @export var quick_shots_before_reload := 3
+@export var reload_tint := Color(0.55, 0.55, 0.55, 1.0)
 
 var charge_time := 0.0
 
@@ -26,8 +27,6 @@ var charge_tween: Tween
 var fully_charged := false
 
 var is_reloading := false
-var reload_rotation := 0.0
-var last_rotation := 0.0
 
 var using_gamepad := false
 
@@ -35,6 +34,9 @@ var using_gamepad := false
 
 
 func _process(delta):
+
+	if player == null:
+		return
 
 	using_gamepad = player.using_gamepad
 
@@ -55,9 +57,6 @@ func _process(delta):
 			bow_color(Color.BLACK)
 		else:
 			bow_color(Color.WHITE)
-
-	if is_reloading:
-		handle_reload_rotation()
 
 
 func update_aim():
@@ -124,24 +123,23 @@ func try_shoot():
 
 func start_reload():
 
+	if is_reloading:
+		return
+
 	is_reloading = true
 
-	reload_rotation = 0.0
-	last_rotation = global_rotation
+	can_shoot = false
+	fully_charged = false
 
+	bow_color(reload_tint)
 
-func handle_reload_rotation():
+	await get_tree().create_timer(reload_time).timeout
 
-	var current_rotation = global_rotation
+	if !is_inside_tree() or !is_reloading:
+		return
 
-	var diff = angle_difference(last_rotation, current_rotation)
+	finish_reload()
 
-	reload_rotation += abs(diff)
-
-	last_rotation = current_rotation
-
-	if reload_rotation >= reload_rotation_required:
-		finish_reload()
 
 
 func finish_reload():
@@ -149,6 +147,8 @@ func finish_reload():
 	is_reloading = false
 
 	can_shoot = true
+
+	bow_color(Color.WHITE)
 
 	if Input.is_action_pressed("attack"):
 		start_charging()

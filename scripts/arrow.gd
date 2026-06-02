@@ -3,6 +3,7 @@ extends Area2D
 @export var speed := 600
 @export var damage := 10
 @export var lifetime := 5.0
+@export var charged_color := Color(1.0, 0.82, 0.22, 1.0)
 
 @onready var sprite = $Sprite2D
 
@@ -27,7 +28,7 @@ func _process(delta):
 	global_position += direction * speed * delta
 	
 	if charged == true:
-		sprite.modulate = Color()
+		sprite.modulate = charged_color
 
 func fade_and_destroy():
 

@@ -1,8 +1,9 @@
 extends Node2D
 
 @export var enemies: Array[PackedScene]
-@export var max_total_enemies := 30
-@export var max_enemies := 15
+@export var max_total_enemies := 20
+@export var max_enemies := 5
+@export var spawn_interval := 2.2
 
 @onready var timer: Timer = $Timer
 
@@ -29,6 +30,7 @@ func _ready() -> void:
 
 	timer.timeout.connect(spawn_enemy)
 
+	timer.wait_time = spawn_interval
 	timer.start()
 	
 	player = get_tree().get_first_node_in_group("player")
